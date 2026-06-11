@@ -65,7 +65,7 @@ def update_todo_handler(todo_id: int, body: TodoUpdateRequest):
             if body.title is not None:
                 todo['title'] = body.title
             if body.is_done is not None:
-                todo['is_body'] = body.is_done
+                todo['is_done'] = body.is_done
             return todo
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Todo not found')
 
@@ -75,7 +75,8 @@ def update_todo_handler(todo_id: int, body: TodoUpdateRequest):
     status_code=status.HTTP_204_NO_CONTENT
 )
 def delete_todo_handler(todo_id: int):
-    if todo['id'] == todo_id:
-        todos.remove(todo)
-        return
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Todo not found')
+    for todo in todos:
+        if todo['id'] == todo_id:
+            todos.remove(todo)
+            return
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Todo not found')
