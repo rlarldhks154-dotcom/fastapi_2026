@@ -12,9 +12,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 from database.orm import Base
 
 # Todo 모델 정의
-class Todo(Base):
+class Blog(Base):
     # DB에서 실제로 사용할 테이블 이름
-    __tablename__ = 'todo'
+    __tablename__ = 'blog'
 
     id: Mapped[int] = mapped_column(
         Integer, # 컬럼 타입 : 정수
@@ -27,8 +27,7 @@ class Todo(Base):
         nullable=False, # 반드시 값이 있어야 한다.
     )
 
-    is_done: Mapped[bool] = mapped_column(
-        Boolean, # Bool형 (True/False)
-        nullable=False,
-        default=False, # 기본값 : False (생성 시 미완료 상태)
+    content: Mapped[str] = mapped_column(
+        String(1000), # 컬럼 타입 : 최대 1000자 문자열
+        nullable=False, # 반드시 값이 있어야 한다.
     )

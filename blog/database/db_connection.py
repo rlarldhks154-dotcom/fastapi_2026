@@ -15,7 +15,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = 'postgresql+psycopg2://postgres:1234@localhost:5432/tododb'
+DATABASE_URL = 'postgresql+psycopg2://postgres:1234@localhost:5432/blogdb'
 
 # 엔진 생성
 # echo=True --> 실행되는 SQL을 터미널에 출력(디버깅용)
