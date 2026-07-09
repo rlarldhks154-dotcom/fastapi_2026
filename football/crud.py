@@ -28,7 +28,7 @@ def get_players(db: Session, skip: int = 0, limit: int = 100,
     query = db.query(models.Player)
     if min_last_changed_date:
         query = query.filter(
-            models.Player.last_chaged_date >= min_last_changed_date
+            models.Player.last_changed_date >= min_last_changed_date
         )
     if first_name:
         query = query.filter(
