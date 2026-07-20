@@ -38,7 +38,7 @@ def create_traffic_station_summary() -> None:
 def create_traffic_hour_summary() -> None:
     print('[batch] 시간대별 승차 집계 완료: traffic_hour_summary')
 
-def run_review_batch() -> None:
+def run_review_batch() -> None: 
     print('[batch] 배치 처리 시작')
     check_subway_input()
     create_traffic_station_summary()
