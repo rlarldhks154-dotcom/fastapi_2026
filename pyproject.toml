@@ -15,4 +15,5 @@ dependencies = [
     "pytest-html>=4.2.0",
     "requests>=2.34.2",
     "sqlalchemy>=2.0.50",
+    "streamlit>=1.59.2",
 ]
