@@ -15,16 +15,16 @@ st.write('대구 지하철 시간대별 승하차 데이터를 활용한 Streaml
 st.subheader('지금까지 다른 화면에서 남긴 흔적')
 
 if 'favorite_stations' in st.session_state and st.session_state.favorite_stations:
-    st.write('즐겨찾는 역:',st.session_state.favorite_stations)
+    st.write('💡즐겨찾는 역:',','.join(st.session_state.favorite_stations))
 else:
-    st.write('즐격찾는 역: 아직 없습니다. "역별 탐색"화면에서 추가해보세요')
+    st.write('즐겨찾는 역: 아직 없습니다. "역별 탐색"화면에서 추가해보세요')
 
 if 'last_viewed_ride_type' in st.session_state:
-    st.write('마지막으로 본 추이 구분:', st.session_state.last_viewed_ride_type)
+    st.write('📈마지막으로 본 추이 구분:', st.session_state.last_viewed_ride_type)
 else:
     st.write('아직 "기간, 시간대 추이" 화면을 방문하지 않았습니다.')
 
 if 'last_search_result' in st.session_state:
-    st.write('마지막 검색 결과 건수:', len(st.session_state.last_search_result))
+    st.write('🔍마지막 검색 결과 건수:', len(st.session_state.last_search_result))
 else:
     st.write('아직 "검색(폼)" 화면에서 검색을 실행하지 않았습니다.')

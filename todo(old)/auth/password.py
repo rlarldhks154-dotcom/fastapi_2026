@@ -3,7 +3,7 @@
 # - 비밀번호 해싱(암호화 저장) / 검증을 담당하는 모듈
 # - pwdlib 라이브러리를 사용
 #   - 내부적으로 무작위값을 자동을 섞어서 해싱하기 때문에 같은 비밀번호라도
-#     매번 다른 해시값이 생성이 된다. 
+#     매번 다른 해시값이 생성이 된다. (argon2 알고리즘)
 
 # 해싱(hashing)
 # - 입력값을 일방향(one-way) 알고리즘을 통해 완전히 다른 문자열로 변환하는 과정
@@ -24,7 +24,7 @@ password_hasher = PasswordHash.recommended()
 def hash_password(plain_password: str) -> str:
     """평문 비밀번호 -> 해시값으로 변환 (회원가입시 DB에 저장하기 전에 사용)"""
     return password_hasher.hash(plain_password)
-    
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """로그인 시, 사용자가 입력한 평문 비밀번호가 DB에 저장된 해시값과 일치하는지 검증"""
-    return password_hasher.verify(plain_password, hashed_password)    
+    return password_hasher.verify(plain_password, hashed_password)

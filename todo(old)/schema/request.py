@@ -19,12 +19,12 @@ class UserSignUpRequest(BaseModel):
     @field_validator('password')
     def validate_password(cls, value):
         if not re.search(r'[A-Z]', value):
-            raise ValueError('비밀번호에는 대문자가 최소 1개 포함되어야 합니다')
+            raise ValueError('비밀번호에는 대문자가 최소 1개 포함되어야 합니다!')
         if not re.search(r'[a-z]', value):
-            raise ValueError('비밀번호에는 소문자가 최소 1개 포함되어야 합니다')
+            raise ValueError('비밀번호에는 소문자가 최소 1개 포함되어야 합니다!')
         if not re.search(r'[0-9]', value):
-            raise ValueError('비밀번호에는 숫자가 최소 1개 포함되어야 합니다')
-        if not re.search(r'[~!@#$%^&*]', value):
-            raise ValueError('비밀번호에는 특수문자가 최소 1개 포함되어야 합니다')
+            raise ValueError('비밀번호에는 숫자가 최소 1개 포함되어야 합니다!')
+        if not re.search(r'[!@#$%^&*(),.?\"{}|<>]', value):
+            raise ValueError('비밀번호에는 특수문자가 최소 1개 포함되어야 합니다!')
         return value
         
