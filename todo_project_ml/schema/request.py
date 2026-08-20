@@ -14,6 +14,7 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 class TodoCreateRequest(BaseModel):
     title: str    # 할 일의 제목, 문자열, 필수값
     is_done: bool = False  # 할 일을 했다?안했다? --> 기본값 False
+    
 
 # --- 할 일 수정 요청 모델 -------------------
 # 두 필드 모두 Optional인 이유 --> PATCH는 "부분 수정 허용"(부분 수정이 원칙)
@@ -21,6 +22,7 @@ class TodoCreateRequest(BaseModel):
 class TodoUpdateRequest(BaseModel):
     title: str | None = None
     is_done: bool | None = None
+    
 
 # --- 회원가입 요청 모델 -------------------------------------------------------------
 class UserSignUpRequest(BaseModel):
@@ -54,3 +56,10 @@ class UserLoginRequest(BaseModel):
 # 로그인 때 받은 refresh_token을 그대로 같이 보내는 용도, 필드는 하나
 class RefreshTokenRequest(BaseModel):
     refresh_token: str = Field(..., description='로그인 시 발급받은 refresh token')
+
+# --- ML 요청 -------------------------------------------
+class CategoryUpdateRequest(BaseModel):
+    # PATCH  /todos/{id}/category 요청 body
+    # 여기서 넘어온 값이 Todo.final_category에 저장되고, 
+    # 나중에 ml/retrain.py가 재학습 데이터로 사용한다.
+    category: str = Field(..., description='사용자가 직접 확정한 카테고리 (업무/개인/긴급)')

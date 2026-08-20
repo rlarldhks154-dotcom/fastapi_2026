@@ -41,16 +41,16 @@ st.markdown('''
 ''', unsafe_allow_html=True) # unsafe_allow_html=True --> html/css가 먼저 적용이 되도록
 
 # -----------------------------------------------------------------------------------------
-# 세션 상태(sesstion_state) 초기화
+# 세션 상태(session_state) 초기화
 #   
 #   스트림릿은 버튼을 누를 때 마다 전체 스크립트가 위에서 아래로 다시 실행된다.
 #   로그인을 했다라는 사실을 변수에 담아둔다.
-#   st.sesstion_state는 재실행되어도 값이 유지되는 유일한 저장공간이다.
+#   st.session_state는 재실행되어도 값이 유지되는 유일한 저장공간이다.
 #   여기에 토큰/로그인 여부를 저장한다.
 # -----------------------------------------------------------------------------------------
-if 'access_token' not in st.sesstion_state:
+if 'access_token' not in st.session_state:
     st.session_state.access_token = None
-if 'user_email' not in st.sesstion_state:
+if 'user_email' not in st.session_state:
     st.session_state.user_email = None
 
 def get_headers() -> dict:
@@ -93,7 +93,7 @@ def extract_error_message(res: requests.Response, fallback: str) -> str:
 # -----------------------------------------------------------------------------------------
 # 로그인 안 된 상태 - 로그인 / 회원가입 화면
 # -----------------------------------------------------------------------------------------
-if not st.sesstion_state.access_token:
+if not st.session_state.access_token:
     st.title('나의 할 일 관리')
     st.caption('로그인하거나 새로 가입해주세요.')
 
@@ -137,7 +137,7 @@ if not st.sesstion_state.access_token:
                     f'{API_BASE}/users/signup',
                     json={'email': email, 'password': password},
                 )
-                if res.status_code == 200: # 회원가입 성공!
+                if res.status_code == 201: # 회원가입 성공!
                     st.success('가입 완료! 로그인 탭에서 로그인해주세요.')
                 else:
                     st.error(extract_error_message(res, '가입에 실패했습니다.'))
@@ -208,6 +208,10 @@ st.divider()
 if total == 0:
     st.info('아직 할 일이 없습니다. 위에서 추가해보세요!')
 
+# ======== Streamlit 쪽에서 보여질 카테고리 선택지 목록 ================
+CATEGORY_OPTIONS = ['업무', '개인', '긴급']
+# ====================================================================
+
 for todo in todos:
     card_class = 'todo-done' if todo['is_done'] else 'todo-pending'
 
@@ -236,3 +240,42 @@ for todo in todos:
         if st.button('X', key=f'delete_{todo["id"]}'):
             requests.delete(f'{API_BASE}/todos/{todo["id"]}', headers=get_headers())
             st.rerun()
+
+    # ========== 카레고리 자동분류 표시/확정 영역 (MLOps 확장 부분) ===================================
+    predicted = todo.get('predicted_category')
+    final = todo.get('final_category')
+
+    # predicted가 None인 경우(=서버에 모델이 로드 안 되어 있던 시점에 생성된 Todo)는
+    # 이 영역 자체를 표시하지 않는다.
+    if predicted:
+        cat_col1, cat_col2 = st.columns([2, 4])
+        with cat_col1:
+            if final:
+                # 사용자가 이미 확인/수정을 완료한 경우
+                st.caption(f'확정된 카테고리: **{final}**')
+            else:
+                # 아직 아무도 확인하지 않은, 모델의 예측 그대로의 상태
+                st.caption(f'모델 예측: **{predicted}** (확인 필요)')
+        with cat_col2:
+            # 확정값이 있으면 있는 값을 사용하고, 없으면 예측값으로 selectbox의 초기 선택값으로 사용
+            current_value = final if final else predicted
+            selected = st.selectbox(
+                '카테고리 확인/수정',
+                CATEGORY_OPTIONS,
+                index=CATEGORY_OPTIONS.index(current_value) if current_value in CATEGORY_OPTIONS else 0,
+                key=f'category_{todo["id"]}',
+                label_visibility='collapsed', # 라벨을 화면에 안보이게(위 caption이 라벨 역할을 대신한다.)
+            )
+            # 사용자가 selectbox에서 값을 바꾼 경우만 서버에 확정 요청을 한다.
+            # --> Todo.final_category를 채우는 지점 --> 나중에 ml/retrain.py의 새 학습 데이터가 된다.
+            if selected != current_value:
+                requests.patch(
+                    f'{API_BASE}/todos/{todo["id"]}/category',
+                    json={"category": selected},
+                    headers=get_headers(),
+                )
+                st.rerun()
+
+    st.divider()
+
+    
