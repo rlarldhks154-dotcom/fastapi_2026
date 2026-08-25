@@ -11,7 +11,7 @@ from fastapi import HTTPException, status
 from models import Movie, Actor, Director
 from repositories.movie_repository import MovieRepository
 from schema.request import MovieCreateRequest, MovieUpdateRequest
-from schema.response import MovieDetailResponse
+from schema.response import MovieDetailResponse, MovieListResponse
 
 
 class MovieService:
@@ -19,8 +19,10 @@ class MovieService:
         self.repository = repository
 
     # ------------------ 조회 (팀원 A 담당 영역) ------------------
-    def get_movies(self, genre, nation, keyword, limit, offset):
-        return self.repository.find_all(genre, nation, keyword, limit, offset)
+    def get_movies(self, genre, nation, keyword, limit, offset) -> MovieListResponse:
+        items = self.repository.find_all(genre, nation, keyword, limit, offset)
+        total = self.repository.count_all(genre, nation, keyword)
+        return MovieListResponse(total=total, items=items)
 
     def get_movie_detail(self, movie_cd: str) -> MovieDetailResponse:
         movie = self.repository.find_by_id(movie_cd)

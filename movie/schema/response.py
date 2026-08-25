@@ -20,6 +20,12 @@ class MovieSummaryResponse(BaseModel):
     watch_grade: str | None
 
 
+class MovieListResponse(BaseModel):
+    """목록 조회 응답 - 전체 개수(total)를 같이 줘서 프론트에서 전체 페이지 수를 계산할 수 있게 함"""
+    total: int
+    items: list[MovieSummaryResponse]
+
+
 class MovieDetailResponse(BaseModel):
     """상세 조회용 - 감독/배우까지 포함"""
     model_config = ConfigDict(from_attributes=True)

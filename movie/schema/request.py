@@ -8,7 +8,7 @@ POST(추가), PATCH(수정) 담당자가 이 파일에 필요한 필드를 이�
 '''
 from pydantic import BaseModel, Field
 
-
+# 추가 (B)
 class MovieCreateRequest(BaseModel):
     """POST /movies 요청 body - 담당자가 프로젝트 상황에 맞게 필드/검증 규칙 조정"""
     movie_cd: str = Field(..., description='영화 코드 (직접 부여하거나 KOBIS 코드 그대로 사용)')
@@ -25,7 +25,7 @@ class MovieCreateRequest(BaseModel):
     directors: list[str] = []
     actors: list[str] = []
 
-
+# 수정 (C)
 class MovieUpdateRequest(BaseModel):
     """
     PATCH /movies/{movie_cd} 요청 body

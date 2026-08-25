@@ -11,7 +11,7 @@ from database.db_connection import get_session
 from repositories.movie_repository import MovieRepository
 from services.movie_service import MovieService
 from schema.request import MovieCreateRequest, MovieUpdateRequest
-from schema.response import MovieSummaryResponse, MovieDetailResponse
+from schema.response import MovieSummaryResponse, MovieDetailResponse, MovieListResponse
 
 router = APIRouter(prefix='/movies', tags=['Movie'])
 

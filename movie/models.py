@@ -33,7 +33,7 @@ class Movie(Base):
     type_nm: Mapped[str | None] = mapped_column(String(20), nullable=True)  # 장편/단편/옴니버스
     nation: Mapped[str | None] = mapped_column(String(100), nullable=True)
     genre: Mapped[str | None] = mapped_column(String(200), nullable=True)
-    watch_grade: Mapped[str | None] = mapped_column(String(300), nullable=True)  # 관람등급
+    watch_grade: Mapped[str | None] = mapped_column(String(300), nullable=True)  # 관람등급 (등급 변경 이력이 여러 개 붙어 길어지는 경우가 있어 넉넉하게 잡음)
 
     actors: Mapped[list['Actor']] = relationship(
         back_populates='movie',
